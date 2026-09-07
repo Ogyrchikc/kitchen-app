@@ -21,6 +21,8 @@
       --accent-red-dim: rgba(239, 68, 68, 0.14);
       --accent-blue: #38bdf8;
       --accent-blue-dim: rgba(56, 189, 248, 0.14);
+      --accent-purple: #a855f7;
+      --accent-purple-dim: rgba(168, 85, 247, 0.14);
       --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
@@ -34,17 +36,17 @@
       user-select: none;
     }
 
-    /* Верхняя плашка */
+    /* Хедер */
     header {
-      padding: 16px 20px;
+      padding: 14px 18px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      background: rgba(13, 15, 18, 0.88);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(13, 15, 18, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       z-index: 50;
       border-bottom: 1px solid var(--card-border);
     }
@@ -56,22 +58,46 @@
     }
 
     .brand-icon {
-      font-size: 24px;
+      font-size: 22px;
     }
 
     .brand-title {
-      font-size: 18px;
-      font-weight: 700;
+      font-size: 17px;
+      font-weight: 800;
       letter-spacing: -0.3px;
     }
 
-    .room-badge {
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-scanner {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
+      padding: 6px 10px;
+      border-radius: 12px;
       font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-scanner:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    .room-badge {
+      font-size: 11.5px;
       color: var(--accent-green);
       background: var(--accent-green-dim);
-      padding: 5px 12px;
+      padding: 5px 11px;
       border-radius: 20px;
-      font-weight: 600;
+      font-weight: 700;
       border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
@@ -90,11 +116,11 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(5px); }
+      from { opacity: 0; transform: translateY(4px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Блок быстрого ввода */
+    /* Строка быстрого добавления */
     .action-bar {
       margin-bottom: 14px;
     }
@@ -142,7 +168,34 @@
       opacity: 0.85;
     }
 
-    /* Карточки продуктов в холодильнике */
+    /* Фильтры в холодильнике */
+    .filter-chips {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      overflow-x: auto;
+      padding-bottom: 2px;
+    }
+
+    .chip {
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--card-border);
+      color: var(--text-muted);
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .chip.active {
+      background: var(--accent-blue-dim);
+      border-color: var(--accent-blue);
+      color: var(--accent-blue);
+    }
+
+    /* Карточки продуктов */
     .card-grid {
       display: flex;
       flex-direction: column;
@@ -224,7 +277,7 @@
     .item-right {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 8px;
       flex-shrink: 0;
     }
 
@@ -237,10 +290,10 @@
       border-radius: 10px;
     }
 
-    .btn-delete {
-      background: rgba(239, 68, 68, 0.1);
-      border: 1px solid rgba(239, 68, 68, 0.2);
-      color: var(--accent-red);
+    .btn-action-sm {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--card-border);
+      color: var(--text-main);
       width: 32px;
       height: 32px;
       border-radius: 10px;
@@ -248,13 +301,16 @@
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      font-size: 14px;
+      font-size: 13px;
       transition: background 0.15s;
     }
 
-    .btn-delete:active {
-      background: rgba(239, 68, 68, 0.25);
+    .btn-action-sm:active {
+      background: rgba(255, 255, 255, 0.15);
     }
+
+    .btn-eat { color: var(--accent-green); border-color: rgba(16, 185, 129, 0.3); }
+    .btn-waste { color: var(--accent-red); border-color: rgba(239, 68, 68, 0.3); }
 
     /* Чеклист покупок */
     .checklist-item {
@@ -275,7 +331,7 @@
     }
 
     .checklist-item.checked {
-      opacity: 0.4;
+      opacity: 0.45;
       background: rgba(22, 24, 31, 0.5);
       border-color: transparent;
     }
@@ -321,6 +377,31 @@
       text-transform: capitalize;
     }
 
+    .cart-tools {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .btn-bulk-transfer {
+      background: var(--accent-green-dim);
+      border: 1px solid rgba(16, 185, 129, 0.3);
+      color: var(--accent-green);
+      padding: 8px 14px;
+      border-radius: 12px;
+      font-size: 12.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-bulk-transfer:active {
+      background: rgba(16, 185, 129, 0.25);
+    }
+
     /* Карточки рецептов */
     .recipe-card {
       background: var(--card-bg);
@@ -343,10 +424,25 @@
       color: var(--text-main);
     }
 
-    .recipe-meta-tag {
+    .recipe-meta-tags {
+      display: flex;
+      gap: 6px;
+    }
+
+    .tag-device {
       font-size: 11px;
       color: var(--accent-orange);
       background: var(--accent-orange-dim);
+      padding: 3px 8px;
+      border-radius: 8px;
+      font-weight: 600;
+      white-space: nowrap;
+    }
+
+    .tag-cal {
+      font-size: 11px;
+      color: var(--accent-blue);
+      background: var(--accent-blue-dim);
       padding: 3px 8px;
       border-radius: 8px;
       font-weight: 600;
@@ -394,15 +490,14 @@
       align-items: center;
       justify-content: center;
       gap: 6px;
-      transition: opacity 0.15s, transform 0.1s;
     }
 
     .btn-cook:active {
-      transform: scale(0.97);
+      transform: scale(0.98);
       opacity: 0.9;
     }
 
-    .btn-secondary {
+    .btn-missing-to-cart {
       background: rgba(255, 255, 255, 0.06);
       color: var(--text-main);
       border: 1px solid var(--card-border);
@@ -411,11 +506,238 @@
       font-size: 13px;
       font-weight: 600;
       cursor: pointer;
-      transition: background 0.15s;
     }
 
-    .btn-secondary:active {
+    .btn-missing-to-cart:active {
       background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Профиль & Финансы */
+    .profile-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .calorie-progress-box {
+      margin-bottom: 14px;
+    }
+
+    .cal-numbers {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 6px;
+    }
+
+    .cal-current {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--text-main);
+    }
+
+    .cal-goal {
+      font-size: 14px;
+      color: var(--text-muted);
+    }
+
+    .progress-bar {
+      height: 8px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: var(--accent-green);
+      border-radius: 10px;
+      transition: width 0.3s ease;
+    }
+
+    .macros-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      text-align: center;
+    }
+
+    .macro-box {
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 10px 6px;
+      border: 1px solid rgba(255, 255, 255, 0.04);
+    }
+
+    .macro-val {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .macro-lbl {
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-top: 2px;
+    }
+
+    .money-stat {
+      font-size: 26px;
+      font-weight: 800;
+      color: var(--accent-orange);
+      margin-bottom: 6px;
+    }
+
+    .invite-box {
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px dashed var(--card-border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .invite-code {
+      font-size: 20px;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--accent-blue);
+    }
+
+    .btn-copy {
+      background: var(--accent-blue-dim);
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: var(--accent-blue);
+      padding: 6px 12px;
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* Модальные окна */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-sheet {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 24px 24px 0 0;
+      width: 100%;
+      max-width: 500px;
+      padding: 24px 20px 30px;
+      box-sizing: border-box;
+      animation: slideUp 0.2s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(100%); }
+      to { transform: translateY(0); }
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+    }
+
+    .modal-subtitle {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+      line-height: 1.4;
+    }
+
+    .modal-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-modal-primary {
+      background: var(--accent-green);
+      color: #064e3b;
+      border: none;
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .btn-modal-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      padding: 14px;
+      border-radius: 14px;
+      font-size: 14.5px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-modal-cancel {
+      background: transparent;
+      color: var(--text-muted);
+      border: none;
+      padding: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    /* Тост-уведомление */
+    .toast {
+      position: fixed;
+      top: 65px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #f8fafc;
+      padding: 10px 18px;
+      border-radius: 20px;
+      font-size: 13.5px;
+      font-weight: 600;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
+      z-index: 300;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
     }
 
     /* Пустые состояния */
@@ -437,14 +759,14 @@
       margin-bottom: 4px;
     }
 
-    /* Нижняя навигация */
+    /* Нижняя панель */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 68px;
-      background: rgba(13, 15, 18, 0.92);
+      background: rgba(13, 15, 18, 0.94);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--card-border);
@@ -465,7 +787,7 @@
       font-size: 11px;
       font-weight: 600;
       cursor: pointer;
-      padding: 8px 16px;
+      padding: 8px 12px;
       border-radius: 12px;
       transition: color 0.15s;
     }
@@ -475,11 +797,14 @@
     }
 
     .nav-icon {
-      font-size: 20px;
+      font-size: 19px;
     }
   </style>
 </head>
 <body>
+
+  <!-- Всплывающий тост -->
+  <div id="toast" class="toast">Уведомление</div>
 
   <!-- Хедер -->
   <header>
@@ -487,27 +812,39 @@
       <span class="brand-icon">🍳</span>
       <span class="brand-title">Kitchen AI</span>
     </div>
-    <div class="room-badge" id="roomBadge">Комната 1</div>
+    <div class="header-actions">
+      <button class="btn-scanner" onclick="startBarcodeScanner()">
+        <span>📷</span>
+        <span>Скан</span>
+      </button>
+      <div class="room-badge" id="roomBadge">Комната 1</div>
+    </div>
   </header>
 
-  <!-- Контент -->
+  <!-- Контент вкладок -->
   <main class="tabs-content">
 
     <!-- Вкладка 1: Холодильник -->
     <section id="tab-fridge" class="tab-pane active">
       <div class="action-bar">
         <div class="quick-input-box">
-          <input type="text" id="fridgeInput" class="quick-input" placeholder="Добавить в холодильник (напр. Сыр 200г)...">
+          <input type="text" id="fridgeInput" class="quick-input" placeholder="Добавить продукт (напр. Сыр 200г)...">
           <button class="btn-add" onclick="addProduct()">+</button>
         </div>
       </div>
 
+      <div class="filter-chips">
+        <div class="chip active" onclick="setFridgeFilter('all', this)">Все продукты</div>
+        <div class="chip" onclick="setFridgeFilter('soon', this)">⚠️ Скоро истекают</div>
+        <div class="chip" onclick="setFridgeFilter('fresh', this)">🌱 Свежие</div>
+      </div>
+
       <div class="card-grid" id="fridgeList">
-        <!-- Генерируется из данных -->
+        <!-- Генерация через JS -->
       </div>
     </section>
 
-    <!-- Вкладка 2: Корзина / Покупки -->
+    <!-- Вкладка 2: Покупки -->
     <section id="tab-cart" class="tab-pane">
       <div class="action-bar">
         <div class="quick-input-box">
@@ -516,21 +853,132 @@
         </div>
       </div>
 
+      <div class="cart-tools">
+        <button class="btn-bulk-transfer" onclick="bulkTransferPurchases()">
+          <span>⚡️</span>
+          <span>Всё купленное — в холодильник</span>
+        </button>
+      </div>
+
       <div id="cartList">
-        <!-- Генерируется из данных -->
+        <!-- Генерация через JS -->
       </div>
     </section>
 
     <!-- Вкладка 3: Рецепты -->
     <section id="tab-recipes" class="tab-pane">
       <div class="card-grid" id="recipesList">
-        <!-- Генерируется из данных -->
+        <!-- Генерация через JS -->
+      </div>
+    </section>
+
+    <!-- Вкладка 4: Профиль & Финансы -->
+    <section id="tab-profile" class="tab-pane">
+      <!-- КБЖУ Дневник -->
+      <div class="profile-card">
+        <div class="card-title">
+          <span>Дневник КБЖУ за сегодня</span>
+          <span style="color: var(--accent-green)">🎯 Цель</span>
+        </div>
+        
+        <div class="calorie-progress-box">
+          <div class="cal-numbers">
+            <div>
+              <span class="cal-current" id="calCurrent">0</span>
+              <span style="font-size: 14px; font-weight: 600; color: var(--text-muted)"> ккал</span>
+            </div>
+            <div class="cal-goal" id="calGoal">из 2000 ккал</div>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-fill" id="calFill" style="width: 0%"></div>
+          </div>
+        </div>
+
+        <div class="macros-grid">
+          <div class="macro-box">
+            <div class="macro-val" id="macroP">0 г</div>
+            <div class="macro-lbl">🥩 Белки</div>
+          </div>
+          <div class="macro-box">
+            <div class="macro-val" id="macroF">0 г</div>
+            <div class="macro-lbl">🧈 Жиры</div>
+          </div>
+          <div class="macro-box">
+            <div class="macro-val" id="macroC">0 г</div>
+            <div class="macro-lbl">🥖 Углеводы</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Расходы месяца -->
+      <div class="profile-card">
+        <div class="card-title">Траты на еду в этом месяце</div>
+        <div class="money-stat" id="monthSpent">0 ₽</div>
+        <div style="font-size: 13px; color: var(--text-muted)">Учитываются все покупки и чеки комнаты</div>
+      </div>
+
+      <!-- Баланс комнаты -->
+      <div class="profile-card">
+        <div class="card-title">Баланс долгов комнаты</div>
+        <div id="debtsSummary" style="font-size: 13.5px; color: var(--text-main); line-height: 1.5; white-space: pre-line">
+          Все долги закрыты или соседи не добавлены.
+        </div>
+      </div>
+
+      <!-- Код комнаты -->
+      <div class="profile-card">
+        <div class="card-title">Код для соседа</div>
+        <div class="invite-box">
+          <div class="invite-code" id="inviteCode">503319</div>
+          <button class="btn-copy" onclick="copyInviteCode()">Скопировать</button>
+        </div>
       </div>
     </section>
 
   </main>
 
-  <!-- Нижняя панель навигации -->
+  <!-- Модальное окно: Вычеркивание покупки -->
+  <div id="cartModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-title" id="cartModalTitle">Товар куплен!</div>
+      <div class="modal-subtitle">Хочешь сразу перенести этот продукт в холодильник комнаты?</div>
+      
+      <div class="modal-actions">
+        <button class="btn-modal-primary" onclick="confirmCartAction(true)">
+          🧊 Да, перенести в холодильник
+        </button>
+        <button class="btn-modal-secondary" onclick="confirmCartAction(false)">
+          ✔️ Просто вычеркнуть из списка
+        </button>
+        <button class="btn-modal-cancel" onclick="closeCartModal()">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Модальное окно: Списание / Съел продукт -->
+  <div id="eatModal" class="modal-overlay">
+    <div class="modal-sheet">
+      <div class="modal-title" id="eatModalTitle">Съесть продукт</div>
+      <div class="modal-subtitle">Сколько грамм ты съел? Это спишется из холодильника и запишется в твой дневник калорий.</div>
+      
+      <div class="action-bar">
+        <input type="number" id="eatQtyInput" class="quick-input" placeholder="Вес / кол-во (напр. 150)">
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn-modal-primary" onclick="confirmEatAction()">
+          🍴 Записать в дневник питания
+        </button>
+        <button class="btn-modal-cancel" onclick="closeEatModal()">
+          Отмена
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Нижняя навигация -->
   <nav class="bottom-nav">
     <button class="nav-btn active" onclick="switchTab('fridge', this)">
       <span class="nav-icon">🧊</span>
@@ -541,13 +989,16 @@
       <span>Покупки</span>
     </button>
     <button class="nav-btn" onclick="switchTab('recipes', this)">
-      <span class="nav-icon">⚡️</span>
+      <span class="nav-icon">🍳</span>
       <span>Рецепты</span>
+    </button>
+    <button class="nav-btn" onclick="switchTab('profile', this)">
+      <span class="nav-icon">📊</span>
+      <span>Профиль</span>
     </button>
   </nav>
 
   <script>
-    // 1. Инициализация Telegram WebApp
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
@@ -561,53 +1012,82 @@
       }
     }
 
-    // Состояние данных
-    let fridgeData = [];
-    let cartData = [];
-    let recipesData = [];
+    function showToast(text) {
+      const el = document.getElementById('toast');
+      el.innerText = text;
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2400);
+    }
 
-    // 2. Распознавание строки количества
-    function parseInputString(input) {
-      const parts = input.trim().split(/\s+/);
-      if (parts.length === 1) {
-        return { name: parts[0], qty: 1, unit: 'шт' };
+    // Состояние приложения
+    let state = {
+      room_id: 1,
+      user_id: 0,
+      invite_code: '503319',
+      fridge: [],
+      cart: [],
+      recipes: [],
+      diary: {
+        calories_today: 0,
+        calorie_goal: 2000,
+        protein_today: 0,
+        fat_today: 0,
+        carbs_today: 0
+      },
+      expenses: {
+        monthly_spent: 0,
+        debts_summary: ''
       }
+    };
+
+    let fridgeFilter = 'all';
+    let pendingCartItem = null;
+    let pendingEatItem = null;
+
+    // Распознавание ввода
+    function parseInput(text) {
+      const parts = text.trim().split(/\s+/);
+      if (parts.length === 1) return { name: parts[0], qty: 1, unit: 'шт' };
       
       const last = parts[parts.length - 1];
       const prev = parts[parts.length - 2];
 
-      // Например: "сыр 200 гр" или "молоко 1 л"
       if (!isNaN(parseFloat(prev))) {
-        const name = parts.slice(0, parts.length - 2).join(' ');
-        return { name: name || 'Продукт', qty: parseFloat(prev), unit: last };
+        return {
+          name: parts.slice(0, parts.length - 2).join(' '),
+          qty: parseFloat(prev),
+          unit: last
+        };
       }
 
-      // Например: "сыр 200г"
       const match = last.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Zа-яА-Я]+)$/);
       if (match) {
-        const name = parts.slice(0, parts.length - 1).join(' ');
-        return { name: name || 'Продукт', qty: parseFloat(match[1]), unit: match[2] };
+        return {
+          name: parts.slice(0, parts.length - 1).join(' '),
+          qty: parseFloat(match[1]),
+          unit: match[2]
+        };
       }
 
-      return { name: input, qty: 1, unit: 'шт' };
+      return { name: text, qty: 1, unit: 'шт' };
     }
 
     function getEmoji(name) {
       const lower = name.toLowerCase();
       if (lower.includes('яйц')) return '🥚';
       if (lower.includes('сыр')) return '🧀';
-      if (lower.includes('молок') || lower.includes('творог')) return '🥛';
-      if (lower.includes('кур') || lower.includes('мясо') || lower.includes('филе') || lower.includes('говяд')) return '🍗';
+      if (lower.includes('молок') || lower.includes('творог') || lower.includes('кефир') || lower.includes('сметан')) return '🥛';
+      if (lower.includes('кур') || lower.includes('филе') || lower.includes('говяд') || lower.includes('мясо') || lower.includes('сосис')) return '🍗';
       if (lower.includes('рис') || lower.includes('гречк') || lower.includes('круп')) return '🍚';
       if (lower.includes('макарон') || lower.includes('спагет')) return '🍝';
       if (lower.includes('хлеб') || lower.includes('батон')) return '🍞';
-      if (lower.includes('яблок') || lower.includes('банан')) return '🍎';
+      if (lower.includes('яблок') || lower.includes('банан') || lower.includes('апельсин')) return '🍎';
       if (lower.includes('огур') || lower.includes('помидор') || lower.includes('салат')) return '🥗';
       if (lower.includes('масло')) return '🧈';
       return '📦';
     }
 
-    // 3. Загрузка данных из URL-параметра ?data=...
+    // Загрузка данных из query string ?data=...
     function loadData() {
       const params = new URLSearchParams(window.location.search);
       const rawB64 = params.get('data');
@@ -616,85 +1096,64 @@
         try {
           let b64 = rawB64.replace(/-/g, '+').replace(/_/g, '/');
           while (b64.length % 4) b64 += '=';
-          const binaryStr = atob(b64);
-          const bytes = new Uint8Array(binaryStr.length);
-          for (let i = 0; i < binaryStr.length; i++) {
-            bytes[i] = binaryStr.charCodeAt(i);
-          }
+          const binStr = atob(b64);
+          const bytes = new Uint8Array(binStr.length);
+          for (let i = 0; i < binStr.length; i++) bytes[i] = binStr.charCodeAt(i);
           const decoded = new TextDecoder('utf-8').decode(bytes);
           const parsed = JSON.parse(decoded);
 
-          if (parsed.fridge) fridgeData = parsed.fridge;
-          if (parsed.cart) cartData = parsed.cart;
-          if (parsed.recipes) recipesData = parsed.recipes;
-          if (parsed.room_id) {
-            document.getElementById('roomBadge').innerText = `Комната ${parsed.room_id}`;
-          }
-
-          localStorage.setItem('kitchen_cached', JSON.stringify(parsed));
+          state = { ...state, ...parsed };
+          localStorage.setItem('kitchen_master_cache', JSON.stringify(state));
           renderAll();
           return;
         } catch (e) {
-          console.error('Error parsing payload:', e);
+          console.error('Error decoding data payload:', e);
         }
       }
 
-      // Fallback на кэш localStorage
-      const cached = localStorage.getItem('kitchen_cached');
+      const cached = localStorage.getItem('kitchen_master_cache');
       if (cached) {
         try {
-          const parsed = JSON.parse(cached);
-          if (parsed.fridge) fridgeData = parsed.fridge;
-          if (parsed.cart) cartData = parsed.cart;
-          if (parsed.recipes) recipesData = parsed.recipes;
-          if (parsed.room_id) {
-            document.getElementById('roomBadge').innerText = `Комната ${parsed.room_id}`;
-          }
+          state = { ...state, ...JSON.parse(cached) };
         } catch (e) {}
-      }
-
-      // Если совсем пусто — дефолтные подсказки
-      if (recipesData.length === 0) {
-        recipesData = [
-          {
-            id: 1,
-            title: 'Ленивый студенческий плов',
-            desc: 'Курица на дно, сверху рис, вода на 1.5 см выше и чеснок. Не перемешивать!',
-            portions: 1,
-            calories: 520,
-            device: 'Мультиварка',
-            ingredients: ['курица 400 гр', 'рис 200 гр', 'морковь 1 шт']
-          },
-          {
-            id: 2,
-            title: 'Макароны без дуршлага с сыром',
-            desc: 'Залить кипятком ровно вровень с макаронами. Вода впитается без остатка.',
-            portions: 1,
-            calories: 450,
-            device: 'Мультиварка',
-            ingredients: ['макароны 150 гр', 'сыр 50 гр']
-          }
-        ];
       }
 
       renderAll();
     }
 
-    // 4. Отрисовка
+    // Отрисовка всего приложения
+    function renderAll() {
+      document.getElementById('roomBadge').innerText = `Комната ${state.room_id}`;
+      document.getElementById('inviteCode').innerText = state.invite_code || '503319';
+
+      renderFridge();
+      renderCart();
+      renderRecipes();
+      renderProfile();
+    }
+
     function renderFridge() {
       const container = document.getElementById('fridgeList');
-      if (fridgeData.length === 0) {
+      let items = state.fridge || [];
+
+      if (fridgeFilter === 'soon') {
+        items = items.filter(i => i.status === 'soon');
+      } else if (fridgeFilter === 'fresh') {
+        items = items.filter(i => i.status === 'ok');
+      }
+
+      if (items.length === 0) {
         container.innerHTML = `
           <div class="empty-state">
             <div class="empty-icon">🧊</div>
-            <div class="empty-title">Холодильник пуст</div>
-            <div>Добавь продукты через строчку выше или сфотографируй чек в чате!</div>
+            <div class="empty-title">В холодильнике пусто</div>
+            <div>Добавь продукты сверху или перенеси из списка покупок!</div>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = fridgeData.map(item => `
+      container.innerHTML = items.map(item => `
         <div class="item-card">
           <div class="item-left">
             <div class="item-emoji">${item.emoji || getEmoji(item.name)}</div>
@@ -707,7 +1166,8 @@
           </div>
           <div class="item-right">
             <span class="item-qty">${item.qty} ${item.unit}</span>
-            <button class="btn-delete" onclick="removeProduct(${item.id}, '${item.name}')">🗑</button>
+            <button class="btn-action-sm btn-eat" onclick="openEatModal(${item.id}, '${item.name}', ${item.qty}, '${item.unit}')" title="Съесть и записать в калории">🍴</button>
+            <button class="btn-action-sm btn-waste" onclick="removeProduct(${item.id}, '${item.name}', ${item.qty}, '${item.unit}')" title="Списать / выбросить">🗑</button>
           </div>
         </div>
       `).join('');
@@ -715,19 +1175,21 @@
 
     function renderCart() {
       const container = document.getElementById('cartList');
-      if (cartData.length === 0) {
+      const items = state.cart || [];
+
+      if (items.length === 0) {
         container.innerHTML = `
           <div class="empty-state">
             <div class="empty-icon">🛒</div>
-            <div class="empty-title">Корзина пуста</div>
-            <div>Все покупки сделаны! Чтобы добавить товар, напиши выше.</div>
+            <div class="empty-title">Список покупок пуст</div>
+            <div>Все куплено! Напиши выше, что нужно докупить.</div>
           </div>
         `;
         return;
       }
 
-      container.innerHTML = cartData.map(item => `
-        <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="toggleBuyItem(${item.id})">
+      container.innerHTML = items.map(item => `
+        <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="onCartItemClick(${item.id}, '${item.name}', ${item.qty}, '${item.unit}')">
           <div class="custom-checkbox">
             <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -738,11 +1200,16 @@
 
     function renderRecipes() {
       const container = document.getElementById('recipesList');
-      container.innerHTML = recipesData.map(r => `
+      const recipes = state.recipes || [];
+
+      container.innerHTML = recipes.map(r => `
         <div class="recipe-card">
           <div class="recipe-header">
             <span class="recipe-title">${r.title}</span>
-            <span class="recipe-meta-tag">🔥 ${r.device || 'Плита'}</span>
+            <div class="recipe-meta-tags">
+              <span class="tag-device">🔥 ${r.device || 'Плита'}</span>
+              <span class="tag-cal">⚡️ ${Math.round(r.calories || 0)} ккал</span>
+            </div>
           </div>
           <div class="recipe-desc">${r.desc || ''}</div>
           
@@ -755,120 +1222,274 @@
               <span>🍳</span>
               <span>Я приготовил это</span>
             </button>
+            <button class="btn-missing-to-cart" onclick="addMissingIngredients(${r.id})">
+              <span>🛒 В покупки</span>
+            </button>
           </div>
         </div>
       `).join('');
     }
 
-    function renderAll() {
-      renderFridge();
-      renderCart();
-      renderRecipes();
+    function renderProfile() {
+      const d = state.diary || {};
+      const calCurrent = Math.round(d.calories_today || 0);
+      const calGoal = Math.round(d.calorie_goal || 2000);
+      
+      document.getElementById('calCurrent').innerText = calCurrent;
+      document.getElementById('calGoal').innerText = `из ${calGoal} ккал`;
+
+      const pct = Math.min(100, Math.round((calCurrent / calGoal) * 100));
+      document.getElementById('calFill').style.width = `${pct}%`;
+
+      document.getElementById('macroP').innerText = `${Math.round(d.protein_today || 0)} г`;
+      document.getElementById('macroF').innerText = `${Math.round(d.fat_today || 0)} г`;
+      document.getElementById('macroC').innerText = `${Math.round(d.carbs_today || 0)} г`;
+
+      const exp = state.expenses || {};
+      document.getElementById('monthSpent').innerText = `${Math.round(exp.monthly_spent || 0)} ₽`;
+      
+      if (exp.debts_summary && exp.debts_summary.trim()) {
+        document.getElementById('debtsSummary').innerText = exp.debts_summary;
+      }
     }
 
-    // 5. Действия и отправка сигналов в Telegram
+    // 5. Действия пользователя
+
+    // Добавить в холодильник
     function addProduct() {
       const input = document.getElementById('fridgeInput');
       const text = input.value.trim();
       if (!text) return;
 
-      const parsed = parseInputString(text);
+      const p = parseInput(text);
       haptic('medium');
 
-      // Локально добавляем сразу
-      fridgeData.unshift({
+      state.fridge.unshift({
         id: Date.now(),
-        name: parsed.name,
-        qty: parsed.qty,
-        unit: parsed.unit,
-        emoji: getEmoji(parsed.name),
+        name: p.name,
+        qty: p.qty,
+        unit: p.unit,
+        emoji: getEmoji(p.name),
         expiry: 'свежее',
         status: 'ok'
       });
       input.value = '';
       renderFridge();
+      showToast(`Добавлено: ${p.name}`);
 
-      // Шлем сигнал в бот
-      if (tg?.sendData) {
-        tg.sendData(JSON.stringify({
-          action: 'add_fridge',
-          name: parsed.name,
-          qty: parsed.qty,
-          unit: parsed.unit
-        }));
-      }
+      sendToBot({
+        action: 'add_fridge',
+        name: p.name,
+        qty: p.qty,
+        unit: p.unit
+      });
     }
 
-    function removeProduct(id, name) {
+    // Списать / выбросить
+    function removeProduct(id, name, qty, unit) {
       haptic('heavy');
-      fridgeData = fridgeData.filter(i => i.id !== id);
+      state.fridge = state.fridge.filter(i => i.id !== id);
       renderFridge();
+      showToast(`Списано: ${name}`);
 
-      if (tg?.sendData) {
-        tg.sendData(JSON.stringify({
-          action: 'remove_fridge',
-          id: id,
-          name: name
-        }));
-      }
+      sendToBot({
+        action: 'waste_product',
+        id: id,
+        name: name,
+        qty: qty,
+        unit: unit
+      });
     }
 
+    // Модалка "Съел продукт" (запись в дневник КБЖУ)
+    function openEatModal(id, name, qty, unit) {
+      haptic('light');
+      pendingEatItem = { id, name, qty, unit };
+      document.getElementById('eatModalTitle').innerText = `Съесть: ${name}`;
+      document.getElementById('eatQtyInput').value = qty;
+      document.getElementById('eatModal').classList.add('active');
+    }
+
+    function closeEatModal() {
+      document.getElementById('eatModal').classList.remove('active');
+      pendingEatItem = null;
+    }
+
+    function confirmEatAction() {
+      if (!pendingEatItem) return;
+      const inputVal = parseFloat(document.getElementById('eatQtyInput').value) || pendingEatItem.qty;
+      haptic('heavy');
+
+      state.fridge = state.fridge.filter(i => i.id !== pendingEatItem.id);
+      renderFridge();
+      closeEatModal();
+      showToast(`Записано в калории: ${pendingEatItem.name}`);
+
+      sendToBot({
+        action: 'eat_product',
+        name: pendingEatItem.name,
+        qty: inputVal,
+        unit: pendingEatItem.unit
+      });
+    }
+
+    // Добавить в корзину
     function addCartItem() {
       const input = document.getElementById('cartInput');
       const text = input.value.trim();
       if (!text) return;
 
-      const parsed = parseInputString(text);
+      const p = parseInput(text);
       haptic('medium');
 
-      cartData.unshift({
+      state.cart.unshift({
         id: Date.now(),
-        name: parsed.name,
-        qty: parsed.qty,
-        unit: parsed.unit,
+        name: p.name,
+        qty: p.qty,
+        unit: p.unit,
         checked: false
       });
       input.value = '';
       renderCart();
+      showToast(`В покупках: ${p.name}`);
 
-      if (tg?.sendData) {
-        tg.sendData(JSON.stringify({
-          action: 'add_cart',
-          name: parsed.name,
-          qty: parsed.qty,
-          unit: parsed.unit
-        }));
-      }
+      sendToBot({
+        action: 'add_cart',
+        name: p.name,
+        qty: p.qty,
+        unit: p.unit
+      });
     }
 
-    function toggleBuyItem(id) {
+    // Клик по товару в корзине (Модальное окно с выбором переноса в холодильник)
+    function onCartItemClick(id, name, qty, unit) {
       haptic('medium');
-      const item = cartData.find(i => i.id === id);
-      if (item) {
-        item.checked = !item.checked;
-        renderCart();
+      pendingCartItem = { id, name, qty, unit };
 
-        // Отправляем покупку в Telegram
-        if (tg?.sendData && item.checked) {
-          tg.sendData(JSON.stringify({
-            action: 'buy_cart',
-            id: id
-          }));
-        }
-      }
+      document.getElementById('cartModalTitle').innerText = `Куплено: ${name}`;
+      document.getElementById('cartModal').classList.add('active');
     }
 
+    function closeCartModal() {
+      document.getElementById('cartModal').classList.remove('active');
+      pendingCartItem = null;
+    }
+
+    function confirmCartAction(toFridge) {
+      if (!pendingCartItem) return;
+      haptic('heavy');
+
+      const item = pendingCartItem;
+      // Удаляем из покупок
+      state.cart = state.cart.filter(i => i.id !== item.id);
+
+      if (toFridge) {
+        // Переносим в холодильник
+        state.fridge.unshift({
+          id: Date.now(),
+          name: item.name,
+          qty: item.qty,
+          unit: item.unit,
+          emoji: getEmoji(item.name),
+          expiry: 'свежее',
+          status: 'ok'
+        });
+        showToast(`Перенесено в холодильник: ${item.name} 🧊`);
+      } else {
+        showToast(`Вычеркнуто: ${item.name}`);
+      }
+
+      closeCartModal();
+      renderFridge();
+      renderCart();
+
+      sendToBot({
+        action: 'buy_cart_item',
+        id: item.id,
+        to_fridge: toFridge
+      });
+    }
+
+    // Перенести все купленное в холодильник
+    function bulkTransferPurchases() {
+      if (state.cart.length === 0) return;
+      haptic('heavy');
+
+      for (const item of state.cart) {
+        state.fridge.unshift({
+          id: Date.now() + Math.random(),
+          name: item.name,
+          qty: item.qty,
+          unit: item.unit,
+          emoji: getEmoji(item.name),
+          expiry: 'свежее',
+          status: 'ok'
+        });
+      }
+      state.cart = [];
+      renderFridge();
+      renderCart();
+      showToast('Все товары перенесены в холодильник! 🧊');
+
+      sendToBot({
+        action: 'buy_all_cart',
+        to_fridge: true
+      });
+    }
+
+    // Готовка
     function cookRecipe(recipeId, title) {
       haptic('heavy');
-      if (confirm(`Приготовить «${title}»? Ингредиенты будут автоматически списаны из холодильника.`)) {
-        if (tg?.sendData) {
-          tg.sendData(JSON.stringify({
-            action: 'cook',
-            recipe_id: recipeId,
-            portions: 1
-          }));
-        }
+      if (confirm(`Приготовить «${title}»? Ингредиенты будут автоматически списаны из холодильника, а калории добавлены в дневник.`)) {
+        showToast(`Готовим: ${title} 🍳`);
+        sendToBot({
+          action: 'cook',
+          recipe_id: recipeId,
+          portions: 1
+        });
       }
+    }
+
+    // Добавить недостающее в покупки
+    function addMissingIngredients(recipeId) {
+      haptic('medium');
+      const r = state.recipes.find(rec => rec.id === recipeId);
+      if (!r) return;
+
+      const itemsToAdd = [];
+      for (const ing of (r.ingredients || [])) {
+        itemsToAdd.push(ing);
+      }
+
+      showToast(`Добавлено в покупки: ${itemsToAdd.length} ингр.`);
+      sendToBot({
+        action: 'add_missing_to_cart',
+        items: itemsToAdd
+      });
+    }
+
+    // Нативный сканер Telegram
+    function startBarcodeScanner() {
+      haptic('light');
+      if (tg?.showScanQrPopup) {
+        tg.showScanQrPopup({ text: 'Наведи камеру на штрихкод товара или QR-код чека' }, (scannedText) => {
+          tg.closeScanQrPopup();
+          showToast(`Код отсканирован! 🔍`);
+          // Отправляем текст в бот
+          tg.sendData(scannedText);
+          return true;
+        });
+      } else {
+        alert('Сканер доступен при открытии внутри Telegram на телефоне!');
+      }
+    }
+
+    function setFridgeFilter(filter, btn) {
+      haptic('light');
+      fridgeFilter = filter;
+      document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      renderFridge();
     }
 
     function switchTab(tabId, btn) {
@@ -880,7 +1501,21 @@
       btn.classList.add('active');
     }
 
-    // Запуск
+    function copyInviteCode() {
+      haptic('medium');
+      const code = state.invite_code || '503319';
+      navigator.clipboard.writeText(code).then(() => {
+        showToast(`Код ${code} скопирован!`);
+      });
+    }
+
+    function sendToBot(payload) {
+      if (tg?.sendData) {
+        tg.sendData(JSON.stringify(payload));
+      }
+    }
+
+    // Старт
     loadData();
   </script>
 </body>
