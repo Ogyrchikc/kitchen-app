@@ -1495,15 +1495,28 @@
       const r = state.recipes.find(rec => rec.id == recipeId);
       if (!r) return;
 
-      let addedCount = 0;
       const ings = r.ingredients || [];
+      if (ings.length === 0) {
+        showToast('В рецепте нет ингредиентов');
+        return;
+      }
+
+      let addedCount = 0;
+      let updatedCount = 0;
 
       for (const ing of ings) {
         const p = parseInput(ing);
-        const already = state.cart.some(item => item.name.toLowerCase() === p.name.toLowerCase());
-        if (!already) {
+        if (!p.name) continue;
+
+        const existing = state.cart.find(item => item.name.toLowerCase() === p.name.toLowerCase());
+        if (existing) {
+          // Если уже есть в покупках — увеличиваем количество
+          existing.qty = Math.round((parseFloat(existing.qty || 0) + parseFloat(p.qty || 1)) * 10) / 10;
+          updatedCount++;
+        } else {
+          // Если нет — добавляем в корзину
           state.cart.unshift({
-            id: Date.now() + Math.random(),
+            id: Date.now() + Math.floor(Math.random() * 1000),
             name: p.name,
             qty: p.qty,
             unit: p.unit,
@@ -1516,16 +1529,17 @@
       saveLocal();
       renderCart();
 
-      if (addedCount > 0) {
-        showToast(`🛒 В покупки добавлено: ${addedCount} ингр.`);
+      const total = addedCount + updatedCount;
+      if (total > 0) {
+        showToast(`🛒 Добавлено в покупки: ${total} поз.`);
       } else {
-        showToast(`Все ингредиенты уже в списке покупок!`);
+        showToast(`🛒 Товары обновлены в покупках!`);
       }
 
       setTimeout(() => {
         const cartBtn = document.querySelectorAll('.nav-btn')[1];
         if (cartBtn) switchTab('cart', cartBtn);
-      }, 350);
+      }, 250);
     }
     function startBarcodeScanner() {
       haptic('light');
