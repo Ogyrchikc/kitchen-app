@@ -1088,6 +1088,13 @@
     }
 
     // Загрузка данных из query string ?data=...
+    // Загрузка данных
+    function saveLocal() {
+      try {
+        localStorage.setItem('kitchen_master_cache', JSON.stringify(state));
+      } catch (e) {}
+    }
+
     function loadData() {
       const params = new URLSearchParams(window.location.search);
       const rawB64 = params.get('data');
@@ -1103,7 +1110,13 @@
           const parsed = JSON.parse(decoded);
 
           state = { ...state, ...parsed };
-          localStorage.setItem('kitchen_master_cache', JSON.stringify(state));
+          saveLocal();
+
+          // Очищаем ?data= из адресной строки!
+          if (window.history && window.history.replaceState) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+          }
+
           renderAll();
           return;
         } catch (e) {
@@ -1111,6 +1124,7 @@
         }
       }
 
+      // При перезагрузке (Reload/F5) берем актуальные сохраненные данные
       const cached = localStorage.getItem('kitchen_master_cache');
       if (cached) {
         try {
@@ -1273,6 +1287,7 @@
         expiry: 'свежее',
         status: 'ok'
       });
+      saveLocal();
       input.value = '';
       renderFridge();
       showToast(`Добавлено: ${p.name}`);
@@ -1287,13 +1302,10 @@
 
     // Списать / выбросить
     function removeProduct(id, name, qty, unit) {
-      haptic('heavy');
       state.fridge = state.fridge.filter(i => i.id !== id);
+      saveLocal();
       renderFridge();
       showToast(`Списано: ${name}`);
-
-      sendToBot({
-        action: 'waste_product',
         id: id,
         name: name,
         qty: qty,
@@ -1321,10 +1333,10 @@
       haptic('heavy');
 
       state.fridge = state.fridge.filter(i => i.id !== pendingEatItem.id);
+      saveLocal();
       renderFridge();
       closeEatModal();
       showToast(`Записано в калории: ${pendingEatItem.name}`);
-
       sendToBot({
         action: 'eat_product',
         name: pendingEatItem.name,
@@ -1349,10 +1361,10 @@
         unit: p.unit,
         checked: false
       });
+      saveLocal();
       input.value = '';
       renderCart();
       showToast(`В покупках: ${p.name}`);
-
       sendToBot({
         action: 'add_cart',
         name: p.name,
@@ -1384,7 +1396,6 @@
       state.cart = state.cart.filter(i => i.id !== item.id);
 
       if (toFridge) {
-        // Переносим в холодильник
         state.fridge.unshift({
           id: Date.now(),
           name: item.name,
@@ -1399,6 +1410,7 @@
         showToast(`Вычеркнуто: ${item.name}`);
       }
 
+      saveLocal();
       closeCartModal();
       renderFridge();
       renderCart();
@@ -1427,10 +1439,10 @@
         });
       }
       state.cart = [];
+      saveLocal();
       renderFridge();
       renderCart();
       showToast('Все товары перенесены в холодильник! 🧊');
-
       sendToBot({
         action: 'buy_all_cart',
         to_fridge: true
@@ -1453,25 +1465,36 @@
     // Добавить недостающее в покупки
     function addMissingIngredients(recipeId) {
       haptic('medium');
-      const r = state.recipes.find(rec => rec.id === recipeId);
+      const r = state.recipes.find(rec => rec.id == recipeId);
       if (!r) return;
 
-      const itemsToAdd = [];
-      for (const ing of (r.ingredients || [])) {
+      let addedCount = 0;
+      const ings = r.ingredients || [];
+
+      for (const ing of ings) {
         const p = parseInput(ing);
-        itemsToAdd.push(ing);
-        state.cart.unshift({
-          id: Date.now() + Math.random(),
-          name: p.name,
-          qty: p.qty,
-          unit: p.unit,
-          checked: false
-        });
+        const already = state.cart.some(item => item.name.toLowerCase() === p.name.toLowerCase());
+        if (!already) {
+          state.cart.unshift({
+            id: Date.now() + Math.random(),
+            name: p.name,
+            qty: p.qty,
+            unit: p.unit,
+            checked: false
+          });
+          addedCount++;
+        }
       }
 
+      saveLocal();
       renderCart();
-      showToast(`🛒 Добавлено в покупки: ${itemsToAdd.length} ингр.`);
-      
+
+      if (addedCount > 0) {
+        showToast(`🛒 В покупки добавлено: ${addedCount} ингр.`);
+      } else {
+        showToast(`Все ингредиенты уже в списке покупок!`);
+      }
+
       setTimeout(() => {
         const cartBtn = document.querySelectorAll('.nav-btn')[1];
         if (cartBtn) switchTab('cart', cartBtn);
@@ -1479,11 +1502,9 @@
 
       sendToBot({
         action: 'add_missing_to_cart',
-        items: itemsToAdd
+        recipe_id: parseInt(recipeId, 10)
       });
     }
-
-    // Нативный сканер Telegram
     function startBarcodeScanner() {
       haptic('light');
       if (tg?.showScanQrPopup) {
