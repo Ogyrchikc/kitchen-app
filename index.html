@@ -933,6 +933,14 @@
           <button class="btn-copy" onclick="copyInviteCode()">Скопировать</button>
         </div>
       </div>
+
+      <!-- Синхронизация с Telegram -->
+      <div class="profile-card" style="text-align: center">
+        <button class="btn-modal-primary" style="width: 100%; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 600; background: #229ED9; color: #fff; cursor: pointer; border: none;" onclick="exportToTelegram()">
+          📤 Отправить сводку в чат Telegram
+        </button>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px">Отправит количество продуктов и покупок в чат и вернет в Telegram</div>
+      </div>
     </section>
 
   </main>
@@ -1096,6 +1104,14 @@
     }
 
     function loadData() {
+      // 1. Сначала читаем сохраненные данные из localStorage
+      let cached = null;
+      try {
+        const raw = localStorage.getItem('kitchen_master_cache');
+        if (raw) cached = JSON.parse(raw);
+      } catch (e) {}
+
+      // 2. Читаем переданные данные из URL
       const params = new URLSearchParams(window.location.search);
       const rawB64 = params.get('data');
 
@@ -1109,11 +1125,23 @@
           const decoded = new TextDecoder('utf-8').decode(bytes);
           const parsed = JSON.parse(decoded);
 
-          state = { ...state, ...parsed };
-          localStorage.removeItem('kitchen_master_cache');
+          if (cached) {
+            state = {
+              ...state,
+              ...parsed,
+              ...cached,
+              recipes: (parsed.recipes && parsed.recipes.length > 0) ? parsed.recipes : (cached.recipes || state.recipes),
+              room_id: parsed.room_id || cached.room_id || state.room_id,
+              invite_code: parsed.invite_code || cached.invite_code || state.invite_code,
+              fridge: (cached.fridge && cached.fridge.length > 0) ? cached.fridge : (parsed.fridge || []),
+              cart: (cached.cart && cached.cart.length > 0) ? cached.cart : (parsed.cart || [])
+            };
+          } else {
+            state = { ...state, ...parsed };
+          }
+
           saveLocal();
 
-          // Очищаем ?data= из адресной строки!
           if (window.history && window.history.replaceState) {
             window.history.replaceState({}, document.title, window.location.pathname);
           }
@@ -1125,12 +1153,8 @@
         }
       }
 
-      // При перезагрузке (Reload/F5) берем актуальные сохраненные данные
-      const cached = localStorage.getItem('kitchen_master_cache');
       if (cached) {
-        try {
-          state = { ...state, ...JSON.parse(cached) };
-        } catch (e) {}
+        state = { ...state, ...cached };
       }
 
       renderAll();
@@ -1502,11 +1526,6 @@
         const cartBtn = document.querySelectorAll('.nav-btn')[1];
         if (cartBtn) switchTab('cart', cartBtn);
       }, 350);
-
-      sendToBot({
-        action: 'add_missing_to_cart',
-        recipe_id: parseInt(recipeId, 10)
-      });
     }
     function startBarcodeScanner() {
       haptic('light');
@@ -1548,10 +1567,20 @@
       });
     }
 
-    function sendToBot(payload) {
-      if (tg?.sendData) {
+    function sendToBot(payload, closeApp = false) {
+      if (closeApp && tg?.sendData) {
         tg.sendData(JSON.stringify(payload));
       }
+    }
+
+    function exportToTelegram() {
+      haptic('medium');
+      sendToBot({
+        action: 'sync_report',
+        fridge_count: state.fridge ? state.fridge.length : 0,
+        cart_count: state.cart ? state.cart.length : 0,
+        room_id: state.room_id
+      }, true);
     }
 
     // Старт
