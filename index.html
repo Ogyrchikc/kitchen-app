@@ -828,7 +828,7 @@
     <section id="tab-fridge" class="tab-pane active">
       <div class="action-bar">
         <div class="quick-input-box">
-          <input type="text" id="fridgeInput" class="quick-input" placeholder="Добавить продукт (напр. Сыр 200г)...">
+          <input type="text" id="fridgeInput" class="quick-input" placeholder="Добавить продукт (напр. Сыр 200г)..." onkeydown="if(event.key==='Enter') addProduct()">
           <button class="btn-add" onclick="addProduct()">+</button>
         </div>
       </div>
@@ -848,7 +848,7 @@
     <section id="tab-cart" class="tab-pane">
       <div class="action-bar">
         <div class="quick-input-box">
-          <input type="text" id="cartInput" class="quick-input" placeholder="Купить в магазине (напр. Молоко 1л)...">
+          <input type="text" id="cartInput" class="quick-input" placeholder="Купить в магазине (напр. Молоко 1л)..." onkeydown="if(event.key==='Enter') addCartItem()">
           <button class="btn-add" onclick="addCartItem()">+</button>
         </div>
       </div>
@@ -949,7 +949,7 @@
   <div id="cartModal" class="modal-overlay">
     <div class="modal-sheet">
       <div class="modal-title" id="cartModalTitle">Товар куплен!</div>
-      <div class="modal-subtitle">Хочешь сразу перенести этот продукт в холодильник комнаты?</div>
+      <div class="modal-subtitle" id="cartModalText">Хочешь сразу перенести этот продукт в холодильник комнаты?</div>
       
       <div class="modal-actions">
         <button class="btn-modal-primary" onclick="confirmCartAction(true)">
@@ -1511,9 +1511,12 @@
       const item = state.fridge.find(i => i.id == id);
       if (!item) return;
       pendingEatItem = item;
-      document.getElementById('eatModalTitle').innerText = `Съесть: ${item.name}`;
-      document.getElementById('eatQtyInput').value = item.qty;
-      document.getElementById('eatModal').classList.add('active');
+      const titleEl = document.getElementById('eatModalTitle');
+      if (titleEl) titleEl.innerText = `Съесть: ${item.name}`;
+      const inputEl = document.getElementById('eatQtyInput');
+      if (inputEl) inputEl.value = item.qty;
+      const modalEl = document.getElementById('eatModal');
+      if (modalEl) modalEl.classList.add('active');
     }
 
     function closeEatModal() {
@@ -1573,9 +1576,12 @@
       const item = state.cart.find(i => i.id == id);
       if (!item) return;
       pendingCartItem = item;
-      document.getElementById('cartModalTitle').innerText = `Куплено: ${item.name}`;
-      document.getElementById('cartModalText').innerText = `Куплено ${item.qty} ${item.unit}. Куда отправить товар?`;
-      document.getElementById('cartModal').classList.add('active');
+      const titleEl = document.getElementById('cartModalTitle');
+      if (titleEl) titleEl.innerText = `Куплено: ${item.name}`;
+      const textEl = document.getElementById('cartModalText');
+      if (textEl) textEl.innerText = `Куплено ${item.qty} ${item.unit}. Куда отправить товар?`;
+      const modalEl = document.getElementById('cartModal');
+      if (modalEl) modalEl.classList.add('active');
     }
     function closeCartModal() {
       document.getElementById('cartModal').classList.remove('active');
