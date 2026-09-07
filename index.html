@@ -8,41 +8,44 @@
   <script src="https://telegram.org/js/telegram-web-app.js"></script>
   <style>
     :root {
-      --bg-color: #0f1115;
-      --card-bg: #181b22;
-      --card-border: #262a35;
-      --text-main: #f1f3f7;
-      --text-muted: #8b949e;
-      --accent-green: #34d399;
-      --accent-green-dim: rgba(52, 211, 153, 0.12);
-      --accent-orange: #fbbf24;
-      --accent-red: #f87171;
-      --accent-blue: #60a5fa;
+      --bg-color: #0d0f12;
+      --card-bg: #16181f;
+      --card-border: #232733;
+      --text-main: #f3f4f6;
+      --text-muted: #94a3b8;
+      --accent-green: #10b981;
+      --accent-green-dim: rgba(16, 185, 129, 0.14);
+      --accent-orange: #f59e0b;
+      --accent-orange-dim: rgba(245, 158, 11, 0.14);
+      --accent-red: #ef4444;
+      --accent-red-dim: rgba(239, 68, 68, 0.14);
+      --accent-blue: #38bdf8;
+      --accent-blue-dim: rgba(56, 189, 248, 0.14);
       --font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     }
 
-    /* Адаптация под системную тему Telegram, если запущено внутри мессенджера */
     body {
       background-color: var(--tg-theme-bg-color, var(--bg-color));
       color: var(--tg-theme-text-color, var(--text-main));
       font-family: var(--font-family);
       margin: 0;
-      padding: 0 0 80px 0;
+      padding: 0 0 85px 0;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
 
+    /* Верхняя плашка */
     header {
-      padding: 18px 20px 12px;
+      padding: 16px 20px;
       display: flex;
       justify-content: space-between;
       align-items: center;
       position: sticky;
       top: 0;
-      background: rgba(15, 17, 21, 0.85);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      z-index: 10;
+      background: rgba(13, 15, 18, 0.88);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      z-index: 50;
       border-bottom: 1px solid var(--card-border);
     }
 
@@ -66,15 +69,15 @@
       font-size: 12px;
       color: var(--accent-green);
       background: var(--accent-green-dim);
-      padding: 4px 10px;
+      padding: 5px 12px;
       border-radius: 20px;
       font-weight: 600;
-      border: 1px solid rgba(52, 211, 153, 0.2);
+      border: 1px solid rgba(16, 185, 129, 0.25);
     }
 
-    /* Навигация вкладками (Tabs) */
+    /* Контент вкладок */
     .tabs-content {
-      padding: 16px 16px 0;
+      padding: 14px 16px 0;
     }
 
     .tab-pane {
@@ -87,22 +90,70 @@
     }
 
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(4px); }
+      from { opacity: 0; transform: translateY(5px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Карточки продуктов */
+    /* Блок быстрого ввода */
+    .action-bar {
+      margin-bottom: 14px;
+    }
+
+    .quick-input-box {
+      display: flex;
+      gap: 8px;
+      width: 100%;
+    }
+
+    .quick-input {
+      flex: 1;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 16px;
+      color: var(--text-main);
+      font-size: 14px;
+      outline: none;
+      box-sizing: border-box;
+      transition: border-color 0.15s;
+    }
+
+    .quick-input:focus {
+      border-color: var(--accent-blue);
+    }
+
+    .btn-add {
+      background: var(--accent-green);
+      color: #064e3b;
+      border: none;
+      border-radius: 14px;
+      padding: 0 18px;
+      font-size: 18px;
+      font-weight: 800;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn-add:active {
+      transform: scale(0.95);
+      opacity: 0.85;
+    }
+
+    /* Карточки продуктов в холодильнике */
     .card-grid {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 9px;
     }
 
     .item-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 16px;
-      padding: 14px 16px;
+      padding: 12px 14px;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -110,37 +161,45 @@
     }
 
     .item-card:active {
-      transform: scale(0.985);
-      border-color: #3b4252;
+      transform: scale(0.99);
+      border-color: #334155;
     }
 
     .item-left {
       display: flex;
       align-items: center;
-      gap: 14px;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
     }
 
     .item-emoji {
-      font-size: 24px;
-      width: 42px;
-      height: 42px;
+      font-size: 22px;
+      width: 40px;
+      height: 40px;
       display: flex;
       align-items: center;
       justify-content: center;
       background: rgba(255, 255, 255, 0.04);
       border-radius: 12px;
+      flex-shrink: 0;
     }
 
     .item-info {
       display: flex;
       flex-direction: column;
-      gap: 3px;
+      gap: 2px;
+      overflow: hidden;
     }
 
     .item-name {
       font-size: 15px;
       font-weight: 600;
       color: var(--text-main);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: capitalize;
     }
 
     .item-meta {
@@ -153,41 +212,71 @@
 
     .expiry-tag {
       font-size: 11px;
-      padding: 2px 6px;
+      padding: 2px 7px;
       border-radius: 6px;
-      font-weight: 500;
+      font-weight: 600;
     }
 
-    .expiry-ok { background: rgba(52, 211, 153, 0.15); color: var(--accent-green); }
-    .expiry-soon { background: rgba(251, 191, 36, 0.15); color: var(--accent-orange); }
-    .expiry-expired { background: rgba(248, 113, 113, 0.15); color: var(--accent-red); }
+    .expiry-ok { background: var(--accent-green-dim); color: var(--accent-green); }
+    .expiry-soon { background: var(--accent-orange-dim); color: var(--accent-orange); }
+    .expiry-expired { background: var(--accent-red-dim); color: var(--accent-red); }
+
+    .item-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex-shrink: 0;
+    }
 
     .item-qty {
-      font-size: 14px;
-      font-weight: 600;
+      font-size: 13.5px;
+      font-weight: 700;
       color: var(--text-main);
-      background: rgba(255, 255, 255, 0.05);
-      padding: 6px 10px;
+      background: rgba(255, 255, 255, 0.06);
+      padding: 5px 9px;
       border-radius: 10px;
     }
 
-    /* Чеклист покупок (One-handed mode) */
+    .btn-delete {
+      background: rgba(239, 68, 68, 0.1);
+      border: 1px solid rgba(239, 68, 68, 0.2);
+      color: var(--accent-red);
+      width: 32px;
+      height: 32px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 14px;
+      transition: background 0.15s;
+    }
+
+    .btn-delete:active {
+      background: rgba(239, 68, 68, 0.25);
+    }
+
+    /* Чеклист покупок */
     .checklist-item {
       display: flex;
       align-items: center;
       gap: 14px;
-      padding: 14px 16px;
+      padding: 13px 15px;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
       border-radius: 14px;
       margin-bottom: 8px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.15s ease;
+    }
+
+    .checklist-item:active {
+      transform: scale(0.985);
     }
 
     .checklist-item.checked {
-      opacity: 0.45;
-      background: rgba(24, 27, 34, 0.5);
+      opacity: 0.4;
+      background: rgba(22, 24, 31, 0.5);
       border-color: transparent;
     }
 
@@ -204,7 +293,8 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      transition: all 0.2s;
+      transition: all 0.15s;
+      flex-shrink: 0;
     }
 
     .checklist-item.checked .custom-checkbox {
@@ -216,7 +306,7 @@
       display: none;
       width: 14px;
       height: 14px;
-      stroke: #0f1115;
+      stroke: #0d0f12;
       stroke-width: 3;
     }
 
@@ -228,61 +318,14 @@
       font-size: 15px;
       font-weight: 500;
       flex: 1;
+      text-transform: capitalize;
     }
 
-    /* Быстрые действия / кнопка добавления */
-    .action-bar {
-      margin-bottom: 16px;
-      display: flex;
-      gap: 10px;
-    }
-
-    .quick-input-box {
-      display: flex;
-      gap: 8px;
-      width: 100%;
-    }
-
-    .quick-input {
-      flex: 1;
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 12px;
-      padding: 12px 14px;
-      color: var(--text-main);
-      font-size: 14px;
-      outline: none;
-      box-sizing: border-box;
-    }
-
-    .quick-input:focus {
-      border-color: var(--accent-blue);
-    }
-
-    .btn-add {
-      background: var(--accent-green);
-      color: #0f1115;
-      border: none;
-      border-radius: 12px;
-      padding: 0 16px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.15s;
-    }
-
-    .btn-add:active {
-      opacity: 0.8;
-    }
-
-    /* Рецепты за 5 минут */
+    /* Карточки рецептов */
     .recipe-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 16px;
       margin-bottom: 12px;
     }
@@ -291,7 +334,7 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
     }
 
     .recipe-title {
@@ -300,11 +343,11 @@
       color: var(--text-main);
     }
 
-    .recipe-time {
-      font-size: 12px;
+    .recipe-meta-tag {
+      font-size: 11px;
       color: var(--accent-orange);
-      background: rgba(251, 191, 36, 0.1);
-      padding: 4px 8px;
+      background: var(--accent-orange-dim);
+      padding: 3px 8px;
       border-radius: 8px;
       font-weight: 600;
       white-space: nowrap;
@@ -317,23 +360,91 @@
       margin-bottom: 12px;
     }
 
-    .recipe-tag {
+    .recipe-ingredients {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-bottom: 14px;
+    }
+
+    .ingredient-badge {
       font-size: 11px;
       background: rgba(255, 255, 255, 0.05);
       color: var(--text-muted);
       padding: 4px 8px;
       border-radius: 6px;
-      display: inline-block;
     }
 
-    /* Нижняя панель навигации (Bottom Bar) */
+    .recipe-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-cook {
+      flex: 1;
+      background: var(--accent-green);
+      color: #064e3b;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 14px;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: opacity 0.15s, transform 0.1s;
+    }
+
+    .btn-cook:active {
+      transform: scale(0.97);
+      opacity: 0.9;
+    }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-secondary:active {
+      background: rgba(255, 255, 255, 0.12);
+    }
+
+    /* Пустые состояния */
+    .empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-muted);
+    }
+
+    .empty-icon {
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .empty-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-main);
+      margin-bottom: 4px;
+    }
+
+    /* Нижняя навигация */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
       height: 68px;
-      background: rgba(15, 17, 21, 0.92);
+      background: rgba(13, 15, 18, 0.92);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border-top: 1px solid var(--card-border);
@@ -376,44 +487,44 @@
       <span class="brand-icon">🍳</span>
       <span class="brand-title">Kitchen AI</span>
     </div>
-    <div class="room-badge">Комната 1</div>
+    <div class="room-badge" id="roomBadge">Комната 1</div>
   </header>
 
-  <!-- Контент вкладок -->
+  <!-- Контент -->
   <main class="tabs-content">
 
     <!-- Вкладка 1: Холодильник -->
     <section id="tab-fridge" class="tab-pane active">
       <div class="action-bar">
         <div class="quick-input-box">
-          <input type="text" id="fridgeInput" class="quick-input" placeholder="Добавить продукт (напр. Сыр 200г)...">
+          <input type="text" id="fridgeInput" class="quick-input" placeholder="Добавить в холодильник (напр. Сыр 200г)...">
           <button class="btn-add" onclick="addProduct()">+</button>
         </div>
       </div>
 
       <div class="card-grid" id="fridgeList">
-        <!-- Генерируется через JS -->
+        <!-- Генерируется из данных -->
       </div>
     </section>
 
-    <!-- Вкладка 2: Корзина / Список покупок -->
+    <!-- Вкладка 2: Корзина / Покупки -->
     <section id="tab-cart" class="tab-pane">
       <div class="action-bar">
         <div class="quick-input-box">
-          <input type="text" id="cartInput" class="quick-input" placeholder="Купить в Магните...">
+          <input type="text" id="cartInput" class="quick-input" placeholder="Купить в магазине (напр. Молоко 1л)...">
           <button class="btn-add" onclick="addCartItem()">+</button>
         </div>
       </div>
 
       <div id="cartList">
-        <!-- Генерируется через JS -->
+        <!-- Генерируется из данных -->
       </div>
     </section>
 
-    <!-- Вкладка 3: Рецепты на скорую руку -->
+    <!-- Вкладка 3: Рецепты -->
     <section id="tab-recipes" class="tab-pane">
       <div class="card-grid" id="recipesList">
-        <!-- Карточки рецептов -->
+        <!-- Генерируется из данных -->
       </div>
     </section>
 
@@ -431,110 +542,335 @@
     </button>
     <button class="nav-btn" onclick="switchTab('recipes', this)">
       <span class="nav-icon">⚡️</span>
-      <span>За 5 минут</span>
+      <span>Рецепты</span>
     </button>
   </nav>
 
   <script>
-    // Инициализация Telegram WebApp
+    // 1. Инициализация Telegram WebApp
     const tg = window.Telegram?.WebApp;
     if (tg) {
       tg.ready();
-      tg.expand(); // Разворачиваем на весь экран
-      tg.enableClosingConfirmation(); // Защита от случайного смахивания
+      tg.expand();
+      tg.enableClosingConfirmation();
     }
 
-    // Тактильный виброотклик (Haptic Feedback)
     function haptic(type = 'light') {
       if (tg?.HapticFeedback) {
         tg.HapticFeedback.impactOccurred(type);
       }
     }
 
-    // Демо-данные (синхронизированы с базой общаги)
-    let fridgeData = [
-      { id: 1, name: 'Куриное филе', qty: '800 гр', emoji: '🍗', expiry: 'до 22 авг', status: 'ok' },
-      { id: 2, name: 'Яйца С1', qty: '10 шт', emoji: '🥚', expiry: 'свежие', status: 'ok' },
-      { id: 3, name: 'Молоко 3.2%', qty: '1000 мл', emoji: '🥛', expiry: 'открыто', status: 'soon' },
-      { id: 4, name: 'Сыр Российский', qty: '250 гр', emoji: '🧀', expiry: 'годен', status: 'ok' }
-    ];
+    // Состояние данных
+    let fridgeData = [];
+    let cartData = [];
+    let recipesData = [];
 
-    let cartData = [
-      { id: 101, name: 'Ультрапастеризованное молоко (для йогуртницы)', checked: false },
-      { id: 102, name: 'Греческий йогурт Теос (закваска)', checked: false },
-      { id: 103, name: 'Рис пропаренный 1 кг', checked: true },
-      { id: 104, name: 'Приправа для плова', checked: false }
-    ];
-
-    const recipesData = [
-      {
-        title: 'Ленивый студенческий плов',
-        time: '5 мин преп / 35 мин',
-        device: 'Мультиварка',
-        desc: 'Курица на дно, сверху рис, вода на 1.5 см выше и головка чеснока. Не перемешивать!'
-      },
-      {
-        title: 'Макароны без дуршлага с сыром',
-        time: '7 минут',
-        device: 'Мультиварка',
-        desc: 'Залить кипятком ровно вровень с макаронами. Вода впитается без остатка — сразу посыпать сыром.'
-      },
-      {
-        title: 'Хрустящие голени в специях',
-        time: '3 мин преп / 20 мин',
-        device: 'Аэрогриль',
-        desc: 'Посолить, поперчить и закинуть при 190°C на 20 минут. Ноль грязной посуды.'
+    // 2. Распознавание строки количества
+    function parseInputString(input) {
+      const parts = input.trim().split(/\s+/);
+      if (parts.length === 1) {
+        return { name: parts[0], qty: 1, unit: 'шт' };
       }
-    ];
+      
+      const last = parts[parts.length - 1];
+      const prev = parts[parts.length - 2];
 
-    // Рендер холодильника
+      // Например: "сыр 200 гр" или "молоко 1 л"
+      if (!isNaN(parseFloat(prev))) {
+        const name = parts.slice(0, parts.length - 2).join(' ');
+        return { name: name || 'Продукт', qty: parseFloat(prev), unit: last };
+      }
+
+      // Например: "сыр 200г"
+      const match = last.match(/^(\d+(?:\.\d+)?)\s*([a-zA-Zа-яА-Я]+)$/);
+      if (match) {
+        const name = parts.slice(0, parts.length - 1).join(' ');
+        return { name: name || 'Продукт', qty: parseFloat(match[1]), unit: match[2] };
+      }
+
+      return { name: input, qty: 1, unit: 'шт' };
+    }
+
+    function getEmoji(name) {
+      const lower = name.toLowerCase();
+      if (lower.includes('яйц')) return '🥚';
+      if (lower.includes('сыр')) return '🧀';
+      if (lower.includes('молок') || lower.includes('творог')) return '🥛';
+      if (lower.includes('кур') || lower.includes('мясо') || lower.includes('филе') || lower.includes('говяд')) return '🍗';
+      if (lower.includes('рис') || lower.includes('гречк') || lower.includes('круп')) return '🍚';
+      if (lower.includes('макарон') || lower.includes('спагет')) return '🍝';
+      if (lower.includes('хлеб') || lower.includes('батон')) return '🍞';
+      if (lower.includes('яблок') || lower.includes('банан')) return '🍎';
+      if (lower.includes('огур') || lower.includes('помидор') || lower.includes('салат')) return '🥗';
+      if (lower.includes('масло')) return '🧈';
+      return '📦';
+    }
+
+    // 3. Загрузка данных из URL-параметра ?data=...
+    function loadData() {
+      const params = new URLSearchParams(window.location.search);
+      const rawB64 = params.get('data');
+
+      if (rawB64) {
+        try {
+          let b64 = rawB64.replace(/-/g, '+').replace(/_/g, '/');
+          while (b64.length % 4) b64 += '=';
+          const binaryStr = atob(b64);
+          const bytes = new Uint8Array(binaryStr.length);
+          for (let i = 0; i < binaryStr.length; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+          }
+          const decoded = new TextDecoder('utf-8').decode(bytes);
+          const parsed = JSON.parse(decoded);
+
+          if (parsed.fridge) fridgeData = parsed.fridge;
+          if (parsed.cart) cartData = parsed.cart;
+          if (parsed.recipes) recipesData = parsed.recipes;
+          if (parsed.room_id) {
+            document.getElementById('roomBadge').innerText = `Комната ${parsed.room_id}`;
+          }
+
+          localStorage.setItem('kitchen_cached', JSON.stringify(parsed));
+          renderAll();
+          return;
+        } catch (e) {
+          console.error('Error parsing payload:', e);
+        }
+      }
+
+      // Fallback на кэш localStorage
+      const cached = localStorage.getItem('kitchen_cached');
+      if (cached) {
+        try {
+          const parsed = JSON.parse(cached);
+          if (parsed.fridge) fridgeData = parsed.fridge;
+          if (parsed.cart) cartData = parsed.cart;
+          if (parsed.recipes) recipesData = parsed.recipes;
+          if (parsed.room_id) {
+            document.getElementById('roomBadge').innerText = `Комната ${parsed.room_id}`;
+          }
+        } catch (e) {}
+      }
+
+      // Если совсем пусто — дефолтные подсказки
+      if (recipesData.length === 0) {
+        recipesData = [
+          {
+            id: 1,
+            title: 'Ленивый студенческий плов',
+            desc: 'Курица на дно, сверху рис, вода на 1.5 см выше и чеснок. Не перемешивать!',
+            portions: 1,
+            calories: 520,
+            device: 'Мультиварка',
+            ingredients: ['курица 400 гр', 'рис 200 гр', 'морковь 1 шт']
+          },
+          {
+            id: 2,
+            title: 'Макароны без дуршлага с сыром',
+            desc: 'Залить кипятком ровно вровень с макаронами. Вода впитается без остатка.',
+            portions: 1,
+            calories: 450,
+            device: 'Мультиварка',
+            ingredients: ['макароны 150 гр', 'сыр 50 гр']
+          }
+        ];
+      }
+
+      renderAll();
+    }
+
+    // 4. Отрисовка
     function renderFridge() {
       const container = document.getElementById('fridgeList');
+      if (fridgeData.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🧊</div>
+            <div class="empty-title">Холодильник пуст</div>
+            <div>Добавь продукты через строчку выше или сфотографируй чек в чате!</div>
+          </div>
+        `;
+        return;
+      }
+
       container.innerHTML = fridgeData.map(item => `
         <div class="item-card">
           <div class="item-left">
-            <div class="item-emoji">${item.emoji}</div>
+            <div class="item-emoji">${item.emoji || getEmoji(item.name)}</div>
             <div class="item-info">
               <span class="item-name">${item.name}</span>
               <div class="item-meta">
-                <span class="expiry-tag expiry-${item.status}">${item.expiry}</span>
+                <span class="expiry-tag expiry-${item.status || 'ok'}">${item.expiry || 'свежее'}</span>
               </div>
             </div>
           </div>
-          <div class="item-qty">${item.qty}</div>
+          <div class="item-right">
+            <span class="item-qty">${item.qty} ${item.unit}</span>
+            <button class="btn-delete" onclick="removeProduct(${item.id}, '${item.name}')">🗑</button>
+          </div>
         </div>
       `).join('');
     }
 
-    // Рендер покупок
     function renderCart() {
       const container = document.getElementById('cartList');
+      if (cartData.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-icon">🛒</div>
+            <div class="empty-title">Корзина пуста</div>
+            <div>Все покупки сделаны! Чтобы добавить товар, напиши выше.</div>
+          </div>
+        `;
+        return;
+      }
+
       container.innerHTML = cartData.map(item => `
-        <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="toggleCart(${item.id})">
+        <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="toggleBuyItem(${item.id})">
           <div class="custom-checkbox">
             <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
-          <span class="check-text">${item.name}</span>
+          <span class="check-text">${item.name} (${item.qty} ${item.unit})</span>
         </div>
       `).join('');
     }
 
-    // Рендер рецептов
     function renderRecipes() {
       const container = document.getElementById('recipesList');
       container.innerHTML = recipesData.map(r => `
         <div class="recipe-card">
           <div class="recipe-header">
             <span class="recipe-title">${r.title}</span>
-            <span class="recipe-time">⏱ ${r.time}</span>
+            <span class="recipe-meta-tag">🔥 ${r.device || 'Плита'}</span>
           </div>
-          <div class="recipe-desc">${r.desc}</div>
-          <span class="recipe-tag">🔥 ${r.device}</span>
+          <div class="recipe-desc">${r.desc || ''}</div>
+          
+          <div class="recipe-ingredients">
+            ${(r.ingredients || []).map(ing => `<span class="ingredient-badge">▫️ ${ing}</span>`).join('')}
+          </div>
+
+          <div class="recipe-actions">
+            <button class="btn-cook" onclick="cookRecipe(${r.id}, '${r.title}')">
+              <span>🍳</span>
+              <span>Я приготовил это</span>
+            </button>
+          </div>
         </div>
       `).join('');
     }
 
-    // Переключение вкладок
+    function renderAll() {
+      renderFridge();
+      renderCart();
+      renderRecipes();
+    }
+
+    // 5. Действия и отправка сигналов в Telegram
+    function addProduct() {
+      const input = document.getElementById('fridgeInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const parsed = parseInputString(text);
+      haptic('medium');
+
+      // Локально добавляем сразу
+      fridgeData.unshift({
+        id: Date.now(),
+        name: parsed.name,
+        qty: parsed.qty,
+        unit: parsed.unit,
+        emoji: getEmoji(parsed.name),
+        expiry: 'свежее',
+        status: 'ok'
+      });
+      input.value = '';
+      renderFridge();
+
+      // Шлем сигнал в бот
+      if (tg?.sendData) {
+        tg.sendData(JSON.stringify({
+          action: 'add_fridge',
+          name: parsed.name,
+          qty: parsed.qty,
+          unit: parsed.unit
+        }));
+      }
+    }
+
+    function removeProduct(id, name) {
+      haptic('heavy');
+      fridgeData = fridgeData.filter(i => i.id !== id);
+      renderFridge();
+
+      if (tg?.sendData) {
+        tg.sendData(JSON.stringify({
+          action: 'remove_fridge',
+          id: id,
+          name: name
+        }));
+      }
+    }
+
+    function addCartItem() {
+      const input = document.getElementById('cartInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      const parsed = parseInputString(text);
+      haptic('medium');
+
+      cartData.unshift({
+        id: Date.now(),
+        name: parsed.name,
+        qty: parsed.qty,
+        unit: parsed.unit,
+        checked: false
+      });
+      input.value = '';
+      renderCart();
+
+      if (tg?.sendData) {
+        tg.sendData(JSON.stringify({
+          action: 'add_cart',
+          name: parsed.name,
+          qty: parsed.qty,
+          unit: parsed.unit
+        }));
+      }
+    }
+
+    function toggleBuyItem(id) {
+      haptic('medium');
+      const item = cartData.find(i => i.id === id);
+      if (item) {
+        item.checked = !item.checked;
+        renderCart();
+
+        // Отправляем покупку в Telegram
+        if (tg?.sendData && item.checked) {
+          tg.sendData(JSON.stringify({
+            action: 'buy_cart',
+            id: id
+          }));
+        }
+      }
+    }
+
+    function cookRecipe(recipeId, title) {
+      haptic('heavy');
+      if (confirm(`Приготовить «${title}»? Ингредиенты будут автоматически списаны из холодильника.`)) {
+        if (tg?.sendData) {
+          tg.sendData(JSON.stringify({
+            action: 'cook',
+            recipe_id: recipeId,
+            portions: 1
+          }));
+        }
+      }
+    }
+
     function switchTab(tabId, btn) {
       haptic('light');
       document.querySelectorAll('.tab-pane').forEach(el => el.classList.remove('active'));
@@ -544,55 +880,8 @@
       btn.classList.add('active');
     }
 
-    // Чекнуть товар в магазине
-    function toggleCart(id) {
-      haptic('medium');
-      const item = cartData.find(i => i.id === id);
-      if (item) {
-        item.checked = !item.checked;
-        renderCart();
-      }
-    }
-
-    // Добавить продукт в холодильник
-    function addProduct() {
-      const input = document.getElementById('fridgeInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      haptic('heavy');
-      fridgeData.unshift({
-        id: Date.now(),
-        name: text,
-        qty: '1 шт',
-        emoji: '📦',
-        expiry: 'свежее',
-        status: 'ok'
-      });
-      input.value = '';
-      renderFridge();
-    }
-
-    // Добавить в корзину
-    function addCartItem() {
-      const input = document.getElementById('cartInput');
-      const text = input.value.trim();
-      if (!text) return;
-
-      haptic('heavy');
-      cartData.unshift({
-        id: Date.now(),
-        name: text,
-        checked: false
-      });
-      input.value = '';
-      renderCart();
-    }
-
-    // Первоначальная отрисовка
-    renderFridge();
-    renderCart();
-    renderRecipes();
+    // Запуск
+    loadData();
   </script>
 </body>
 </html>
