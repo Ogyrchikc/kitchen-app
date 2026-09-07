@@ -1530,11 +1530,53 @@
     function startBarcodeScanner() {
       haptic('light');
       if (tg?.showScanQrPopup) {
-        tg.showScanQrPopup({ text: 'Наведи камеру на штрихкод товара или QR-код чека' }, (scannedText) => {
+        tg.showScanQrPopup({ text: 'Наведи камеру на штрихкод товара или QR-код чека' }, async (scannedText) => {
           tg.closeScanQrPopup();
-          showToast(`Код отсканирован! 🔍`);
-          // Отправляем текст в бот
-          tg.sendData(scannedText);
+          const cleanText = (scannedText || '').trim();
+          if (!cleanText) return true;
+
+          // 1. Линейный штрихкод (EAN-13, 8-14 цифр): мгновенный поиск в Open Food Facts прямо в приложении!
+          if (/^\d{8,14}$/.test(cleanText)) {
+            showToast(`Ищем товар по штрихкоду... 🔍`);
+            try {
+              const resp = await fetch(`https://world.openfoodfacts.org/api/v0/product/${cleanText}.json`);
+              const data = await resp.json();
+              if (data && data.status === 1 && data.product) {
+                const prodName = data.product.product_name_ru || data.product.product_name || cleanText;
+                state.fridge.unshift({
+                  id: Date.now(),
+                  name: prodName.toLowerCase(),
+                  qty: 1,
+                  unit: 'шт',
+                  emoji: getEmoji(prodName),
+                  expiry: 'свежее',
+                  status: 'ok'
+                });
+                saveLocal();
+                renderFridge();
+                showToast(`✅ Добавлено: ${prodName}`);
+                return true;
+              }
+            } catch (e) {
+              console.error('Barcode fetch error:', e);
+            }
+          }
+
+          // 2. Если это QR-код чека (t=...&s=...) или Честный Знак:
+          try {
+            if (navigator.clipboard) {
+              navigator.clipboard.writeText(cleanText);
+            }
+          } catch (e) {}
+
+          showToast(`Чек отсканирован! Обрабатываем... 🧾`);
+
+          // Отправляем в Telegram чат для загрузки чека через ФНС API
+          if (tg?.sendData) {
+            try {
+              tg.sendData(cleanText);
+            } catch (e) {}
+          }
           return true;
         });
       } else {
