@@ -1309,7 +1309,13 @@
       }
 
       if (cached) {
-        state = { ...state, ...cached };
+        state = {
+          ...state,
+          ...cached,
+          recipes: (cached.recipes && cached.recipes.length > 0) ? cached.recipes : DEFAULT_RECIPES
+        };
+      } else {
+        state.recipes = DEFAULT_RECIPES;
       }
 
       renderAll();
@@ -1360,8 +1366,8 @@
           </div>
           <div class="item-right">
             <span class="item-qty">${item.qty} ${item.unit}</span>
-            <button class="btn-action-sm btn-eat" onclick="openEatModal(${item.id}, '${item.name}', ${item.qty}, '${item.unit}')" title="Съесть и записать в калории">🍴</button>
-            <button class="btn-action-sm btn-waste" onclick="removeProduct(${item.id}, '${item.name}', ${item.qty}, '${item.unit}')" title="Списать / выбросить">🗑</button>
+            <button class="btn-action-sm btn-eat" onclick="openEatModal(${item.id})" title="Съесть и записать в калории">🍴</button>
+            <button class="btn-action-sm btn-waste" onclick="removeProduct(${item.id})" title="Списать / выбросить">🗑</button>
           </div>
         </div>
       `).join('');
@@ -1383,7 +1389,7 @@
       }
 
       container.innerHTML = items.map(item => `
-        <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="onCartItemClick(${item.id}, '${item.name}', ${item.qty}, '${item.unit}')">
+        <div class="checklist-item ${item.checked ? 'checked' : ''}" onclick="onCartItemClick(${item.id})">
           <div class="custom-checkbox">
             <svg viewBox="0 0 24 24" fill="none"><polyline points="20 6 9 17 4 12"></polyline></svg>
           </div>
@@ -1412,7 +1418,7 @@
           </div>
 
           <div class="recipe-actions">
-            <button class="btn-cook" onclick="cookRecipe(${r.id}, '${r.title}')">
+            <button class="btn-cook" onclick="cookRecipe(${r.id})">
               <span>🍳</span>
               <span>Я приготовил это</span>
             </button>
@@ -1481,26 +1487,32 @@
     }
 
     // Списать / выбросить
-    function removeProduct(id, name, qty, unit) {
-      state.fridge = state.fridge.filter(i => i.id !== id);
+    function removeProduct(id) {
+      const item = state.fridge.find(i => i.id == id);
+      const name = item ? item.name : 'Продукт';
+      state.fridge = state.fridge.filter(i => i.id != id);
       saveLocal();
       renderFridge();
       showToast(`Списано: ${name}`);
-      sendToBot({
-        action: 'waste_product',
-        id: id,
-        name: name,
-        qty: qty,
-        unit: unit
-      });
+    }
+
+    function cookRecipe(recipeId) {
+      haptic('heavy');
+      const r = state.recipes.find(rec => rec.id == recipeId);
+      const title = r ? r.title : 'Блюдо';
+      if (confirm(`Приготовить «${title}»? Ингредиенты будут автоматически списаны из холодильника, а калории добавлены в дневник.`)) {
+        showToast(`Готовим: ${title} 🍳`);
+      }
     }
 
     // Модалка "Съел продукт" (запись в дневник КБЖУ)
-    function openEatModal(id, name, qty, unit) {
+    function openEatModal(id) {
       haptic('light');
-      pendingEatItem = { id, name, qty, unit };
-      document.getElementById('eatModalTitle').innerText = `Съесть: ${name}`;
-      document.getElementById('eatQtyInput').value = qty;
+      const item = state.fridge.find(i => i.id == id);
+      if (!item) return;
+      pendingEatItem = item;
+      document.getElementById('eatModalTitle').innerText = `Съесть: ${item.name}`;
+      document.getElementById('eatQtyInput').value = item.qty;
       document.getElementById('eatModal').classList.add('active');
     }
 
@@ -1556,14 +1568,15 @@
     }
 
     // Клик по товару в корзине (Модальное окно с выбором переноса в холодильник)
-    function onCartItemClick(id, name, qty, unit) {
+    function onCartItemClick(id) {
       haptic('medium');
-      pendingCartItem = { id, name, qty, unit };
-
-      document.getElementById('cartModalTitle').innerText = `Куплено: ${name}`;
+      const item = state.cart.find(i => i.id == id);
+      if (!item) return;
+      pendingCartItem = item;
+      document.getElementById('cartModalTitle').innerText = `Куплено: ${item.name}`;
+      document.getElementById('cartModalText').innerText = `Куплено ${item.qty} ${item.unit}. Куда отправить товар?`;
       document.getElementById('cartModal').classList.add('active');
     }
-
     function closeCartModal() {
       document.getElementById('cartModal').classList.remove('active');
       pendingCartItem = null;
