@@ -1458,10 +1458,25 @@
 
       const itemsToAdd = [];
       for (const ing of (r.ingredients || [])) {
+        const p = parseInput(ing);
         itemsToAdd.push(ing);
+        state.cart.unshift({
+          id: Date.now() + Math.random(),
+          name: p.name,
+          qty: p.qty,
+          unit: p.unit,
+          checked: false
+        });
       }
 
-      showToast(`Добавлено в покупки: ${itemsToAdd.length} ингр.`);
+      renderCart();
+      showToast(`🛒 Добавлено в покупки: ${itemsToAdd.length} ингр.`);
+      
+      setTimeout(() => {
+        const cartBtn = document.querySelectorAll('.nav-btn')[1];
+        if (cartBtn) switchTab('cart', cartBtn);
+      }, 350);
+
       sendToBot({
         action: 'add_missing_to_cart',
         items: itemsToAdd
