@@ -937,9 +937,9 @@
       <!-- Синхронизация с Telegram -->
       <div class="profile-card" style="text-align: center">
         <button class="btn-modal-primary" style="width: 100%; border-radius: 12px; padding: 14px; font-size: 15px; font-weight: 600; background: #229ED9; color: #fff; cursor: pointer; border: none;" onclick="exportToTelegram()">
-          📤 Отправить сводку в чат Telegram
+          📤 Отправить сводку соседям / в чат
         </button>
-        <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px">Отправит количество продуктов и покупок в чат и вернет в Telegram</div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-top: 8px">Отправит холодильник, корзину и баланс тебе и всем соседям по комнате</div>
       </div>
     </section>
 
@@ -1280,20 +1280,13 @@
             if (!mergedRecipes.some(r => r.id == cr.id)) mergedRecipes.push(cr);
           }
 
-          if (cached) {
-            state = {
-              ...state,
-              ...parsed,
-              ...cached,
-              recipes: mergedRecipes,
-              room_id: parsed.room_id || cached.room_id || state.room_id,
-              invite_code: parsed.invite_code || cached.invite_code || state.invite_code,
-              fridge: (cached.fridge && cached.fridge.length > 0) ? cached.fridge : (parsed.fridge || []),
-              cart: (cached.cart && cached.cart.length > 0) ? cached.cart : (parsed.cart || [])
-            };
-          } else {
-            state = { ...state, ...parsed, recipes: mergedRecipes };
-          }
+          state = {
+            ...state,
+            ...parsed,
+            recipes: mergedRecipes,
+            fridge: parsed.fridge || [],
+            cart: parsed.cart || []
+          };
 
           saveLocal();
 
@@ -1757,15 +1750,24 @@
             }
           } catch (e) {}
 
-          showToast(`Чек отсканирован! Обрабатываем... 🧾`);
-
-          // Отправляем в Telegram чат для загрузки чека через ФНС API
+          let sent = false;
           if (tg?.sendData) {
             try {
               tg.sendData(cleanText);
+              sent = true;
             } catch (e) {}
           }
-          return true;
+
+          if (sent) {
+            showToast(`Чек отправлен боту на обработку! 🧾`);
+          } else {
+            showToast(`QR скопирован! Отправь его в чат боту 📲`);
+            setTimeout(() => {
+              if (tg?.openTelegramLink) {
+                tg.openTelegramLink('https://t.me/cotenokpovarenok_bot');
+              }
+            }, 1200);
+          }
         });
       } else {
         alert('Сканер доступен при открытии внутри Telegram на телефоне!');
@@ -1799,20 +1801,36 @@
 
     function sendToBot(payload, closeApp = false) {
       if (closeApp && tg?.sendData) {
-        tg.sendData(JSON.stringify(payload));
+        try {
+          tg.sendData(JSON.stringify(payload));
+        } catch (e) {}
       }
     }
 
     function exportToTelegram() {
       haptic('medium');
-      sendToBot({
-        action: 'sync_report',
-        fridge_count: state.fridge ? state.fridge.length : 0,
-        cart_count: state.cart ? state.cart.length : 0,
-        room_id: state.room_id
-      }, true);
+      let sent = false;
+      if (tg?.sendData) {
+        try {
+          tg.sendData(JSON.stringify({
+            action: 'sync_report',
+            fridge_count: state.fridge ? state.fridge.length : 0,
+            cart_count: state.cart ? state.cart.length : 0,
+            room_id: state.room_id
+          }));
+          sent = true;
+        } catch (e) {
+          console.warn('sendData error:', e);
+        }
+      }
+      if (!sent) {
+        if (tg?.openTelegramLink) {
+          tg.openTelegramLink('https://t.me/cotenokpovarenok_bot?start=summary');
+        } else {
+          window.location.href = 'https://t.me/cotenokpovarenok_bot?start=summary';
+        }
+      }
     }
-
     // Старт
     loadData();
   </script>
